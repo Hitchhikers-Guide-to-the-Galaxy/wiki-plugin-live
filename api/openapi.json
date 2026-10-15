@@ -1,0 +1,234 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Live",
+    "version": "0.1.1",
+    "description": "The farm records a workshop. A session page's live item asks this farm to open a microphone with ffmpeg and write one-minute segments, with timestamps that never reset, into the page's assets folder; Begin, Finish and End are marks stamped on the recorder's own clock and kept in marks.json beside the segments. End stitches the segments into one m4a for the page. The recorder outlives the farm: a restart adopts it again."
+  },
+  "paths": {
+    "/devices.json": {
+      "get": {
+        "operationId": "devices",
+        "summary": "The microphones this farm can record from",
+        "x-fedwiki-read-only": true,
+        "x-fedwiki-context": [],
+        "responses": {
+          "200": {
+            "description": "platform, devices (names, in the order ffmpeg lists them) and default."
+          }
+        }
+      }
+    },
+    "/status.json": {
+      "get": {
+        "operationId": "status",
+        "summary": "What a session's recorder is doing",
+        "description": "state is idle, checking, recording, interrupted (ffmpeg died without an End; Record resumes), stopped or ended. clock is session seconds now; level the last peak readings in dBFS, five a second; marks every mark so far.",
+        "x-fedwiki-read-only": true,
+        "x-fedwiki-context": [
+          "status"
+        ],
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "query",
+            "required": true,
+            "description": "The session page, whose assets folder holds the recording.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The session's state, clock, level, runs and marks."
+          }
+        }
+      }
+    },
+    "/check.json": {
+      "post": {
+        "operationId": "check",
+        "summary": "Mic Check: open the microphone and feed the meter, recording nothing",
+        "description": "Runs ffmpeg against the microphone for a while (30 s by default) so status carries its level. stop ends it early. While the recorder runs this does nothing: the meter is already live.",
+        "x-fedwiki-writes": true,
+        "x-fedwiki-context": [
+          "status"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "slug"
+                ],
+                "properties": {
+                  "slug": {
+                    "type": "string",
+                    "description": "The session page, whose assets folder holds the recording."
+                  },
+                  "device": {
+                    "type": "string",
+                    "description": "The microphone, by the name devices lists. Omitted: LIVE_MIC, else the built-in microphone."
+                  },
+                  "seconds": {
+                    "type": "integer",
+                    "description": "How long to listen, 3 to 300."
+                  },
+                  "stop": {
+                    "type": "boolean",
+                    "description": "Stop a check in progress."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The session's status after the operation, as status returns it."
+          },
+          "409": {
+            "description": "The recorder is not in a state where this makes sense."
+          }
+        }
+      }
+    },
+    "/record.json": {
+      "post": {
+        "operationId": "record",
+        "summary": "Start the recorder (or resume it after an interruption)",
+        "description": "Spawns ffmpeg, detached, writing assets/<slug>/live/seg-RR-NNNN.ts in one-minute segments. After an interruption a new run starts at the offset where the last one's audio stops, so session seconds stay the position in the stitched recording.",
+        "x-fedwiki-writes": true,
+        "x-fedwiki-context": [
+          "status"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "slug"
+                ],
+                "properties": {
+                  "slug": {
+                    "type": "string",
+                    "description": "The session page, whose assets folder holds the recording."
+                  },
+                  "device": {
+                    "type": "string",
+                    "description": "The microphone, by the name devices lists. Omitted: LIVE_MIC, else the built-in microphone."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The session's status after the operation, as status returns it."
+          },
+          "409": {
+            "description": "The recorder is not in a state where this makes sense."
+          }
+        }
+      }
+    },
+    "/mark.json": {
+      "post": {
+        "operationId": "mark",
+        "summary": "Begin or Finish a contribution",
+        "description": "Stamps the mark in session seconds from the recorder's clock and writes marks.json (fsync) before answering. A Begin while a contribution is open finishes it at the same instant.",
+        "x-fedwiki-writes": true,
+        "x-fedwiki-context": [
+          "status"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "slug",
+                  "kind"
+                ],
+                "properties": {
+                  "slug": {
+                    "type": "string",
+                    "description": "The session page, whose assets folder holds the recording."
+                  },
+                  "kind": {
+                    "type": "string",
+                    "enum": [
+                      "begin",
+                      "finish"
+                    ]
+                  },
+                  "speaker": {
+                    "type": "string",
+                    "description": "Who is speaking, for a Begin."
+                  },
+                  "language": {
+                    "type": "string",
+                    "description": "The language they speak, for a Begin."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The session's status after the operation, as status returns it."
+          },
+          "409": {
+            "description": "The recorder is not in a state where this makes sense."
+          }
+        }
+      }
+    },
+    "/end.json": {
+      "post": {
+        "operationId": "end",
+        "summary": "End: the last mark, stop the recorder, stitch the recording",
+        "description": "Writes the End mark, stops ffmpeg (it closes its last segment), and stitches every run into assets/<slug>/<slug>.m4a. The segments are kept until the page is reviewed. Called again it re-stitches.",
+        "x-fedwiki-writes": true,
+        "x-fedwiki-context": [
+          "status"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "slug"
+                ],
+                "properties": {
+                  "slug": {
+                    "type": "string",
+                    "description": "The session page, whose assets folder holds the recording."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The session's status after the operation, as status returns it."
+          },
+          "409": {
+            "description": "The recorder is not in a state where this makes sense."
+          }
+        }
+      }
+    }
+  }
+}

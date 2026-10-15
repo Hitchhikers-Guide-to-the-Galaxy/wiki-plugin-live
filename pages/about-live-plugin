@@ -1,0 +1,108 @@
+{
+  "title": "About Live Plugin",
+  "story": [
+    {
+      "type": "markdown",
+      "id": "329adf54f7f27328",
+      "text": "The Live plugin lets the farm record a workshop. The farm, not the browser, opens the microphone with ffmpeg and writes one-minute segments into this page's assets folder; the item is a remote control that marks each contribution on the recorder's own clock. Close the browser and the recording goes on."
+    },
+    {
+      "type": "live",
+      "id": "314cf97fc8300f1c",
+      "text": "NAMES: Aycan, Anna Maria, Berk, Deniz, Elif, Selin\nLANGUAGES: Turkish, English\nThe example session. Press Mic Check to see what the farm's microphone hears."
+    },
+    {
+      "type": "markdown",
+      "id": "45792079b051460a",
+      "text": "# Buttons\n> Record, then Begin and Finish for each speaker, then End."
+    },
+    {
+      "type": "markdown",
+      "id": "f71355ded0ada5d6",
+      "text": "**Record** starts the recorder on the chosen microphone (after an interruption it says **Resume** and carries on where the audio stops). **Begin** marks the start of a contribution by the chosen name in the chosen language; a Begin while someone is still speaking finishes them at the same instant. **Finish** marks its end. **End**, red and set apart, marks the end, stops the recorder and stitches the segments into one m4a for the page. **Mic Check** listens without recording and drives the meter."
+    },
+    {
+      "type": "markdown",
+      "id": "df556179b011add9",
+      "text": "# Item text\n> Three commands, the rest is caption."
+    },
+    {
+      "type": "table",
+      "id": "b8158da65806285c",
+      "text": "CAPTION The live item's commands\n\n| Command | Meaning |\n|---|---|\n| NAMES | The participants, comma separated \u2014 one button each. Six by default. |\n| LANGUAGES | The languages a contribution may be in, comma separated; the first is chosen. |\n| MIC | The microphone to offer first, by the name the farm lists. |"
+    },
+    {
+      "type": "markdown",
+      "id": "3d78777cad6ba687",
+      "text": "# Files\n> Where the recording lives."
+    },
+    {
+      "type": "markdown",
+      "id": "aee664dbe3c44d58",
+      "text": "- `assets/<page>/live/seg-RR-NNNN.ts` \u2014 one-minute MPEG-TS segments of run RR, timestamps never reset, kept until the page is reviewed\n- `assets/<page>/live/marks.json` \u2014 runs and marks in session seconds, rewritten and flushed to disk on every button\n- `assets/<page>/<page>.m4a` \u2014 the stitched recording, made at End\n- `status/live/<page>/` \u2014 the recorder's pid, clock and level, never served"
+    },
+    {
+      "type": "markdown",
+      "id": "81b4b1463f98333d",
+      "text": "# See\n\n[[Live Audio Capture Plan]] \u00b7 [[Voice Tool]] \u00b7 [[The Recorder Is Not the Browser]]"
+    }
+  ],
+  "journal": [
+    {
+      "type": "create",
+      "item": {
+        "title": "About Live Plugin",
+        "story": [
+          {
+            "type": "markdown",
+            "id": "329adf54f7f27328",
+            "text": "The Live plugin lets the farm record a workshop. The farm, not the browser, opens the microphone with ffmpeg and writes one-minute segments into this page's assets folder; the item is a remote control that marks each contribution on the recorder's own clock. Close the browser and the recording goes on."
+          },
+          {
+            "type": "live",
+            "id": "314cf97fc8300f1c",
+            "text": "NAMES: Aycan, Anna Maria, Berk, Deniz, Elif, Selin\nLANGUAGES: Turkish, English\nThe example session. Press Mic Check to see what the farm's microphone hears."
+          },
+          {
+            "type": "markdown",
+            "id": "45792079b051460a",
+            "text": "# Buttons\n> Record, then Begin and Finish for each speaker, then End."
+          },
+          {
+            "type": "markdown",
+            "id": "f71355ded0ada5d6",
+            "text": "**Record** starts the recorder on the chosen microphone (after an interruption it says **Resume** and carries on where the audio stops). **Begin** marks the start of a contribution by the chosen name in the chosen language; a Begin while someone is still speaking finishes them at the same instant. **Finish** marks its end. **End**, red and set apart, marks the end, stops the recorder and stitches the segments into one m4a for the page. **Mic Check** listens without recording and drives the meter."
+          },
+          {
+            "type": "markdown",
+            "id": "df556179b011add9",
+            "text": "# Item text\n> Three commands, the rest is caption."
+          },
+          {
+            "type": "table",
+            "id": "b8158da65806285c",
+            "text": "CAPTION The live item's commands\n\n| Command | Meaning |\n|---|---|\n| NAMES | The participants, comma separated \u2014 one button each. Six by default. |\n| LANGUAGES | The languages a contribution may be in, comma separated; the first is chosen. |\n| MIC | The microphone to offer first, by the name the farm lists. |"
+          },
+          {
+            "type": "markdown",
+            "id": "3d78777cad6ba687",
+            "text": "# Files\n> Where the recording lives."
+          },
+          {
+            "type": "markdown",
+            "id": "aee664dbe3c44d58",
+            "text": "- `assets/<page>/live/seg-RR-NNNN.ts` \u2014 one-minute MPEG-TS segments of run RR, timestamps never reset, kept until the page is reviewed\n- `assets/<page>/live/marks.json` \u2014 runs and marks in session seconds, rewritten and flushed to disk on every button\n- `assets/<page>/<page>.m4a` \u2014 the stitched recording, made at End\n- `status/live/<page>/` \u2014 the recorder's pid, clock and level, never served"
+          },
+          {
+            "type": "markdown",
+            "id": "81b4b1463f98333d",
+            "text": "# See\n\n[[Live Audio Capture Plan]] \u00b7 [[Voice Tool]] \u00b7 [[The Recorder Is Not the Browser]]"
+          }
+        ]
+      },
+      "date": 1792060690859,
+      "provenance": "Authored by an AI agent \u2014 Claude Code via the [[fedwiki-create-plugin]] skill, in a dialogue with [[David Bovill]]. [https://claude.com/claude-code Claude Code]"
+    }
+  ],
+  "plugin": "live"
+}

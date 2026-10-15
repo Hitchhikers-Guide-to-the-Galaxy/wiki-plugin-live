@@ -1,0 +1,46 @@
+{
+  "name": "wiki-plugin-live",
+  "version": "0.1.1",
+  "description": "Federated Wiki - Live Plugin: the farm records a workshop continuously in one-minute segments into a page's assets, and the item marks each contribution — Begin, Finish, End — on the recorder's clock",
+  "keywords": [
+    "audio",
+    "recorder",
+    "workshop",
+    "ffmpeg",
+    "wiki",
+    "federated wiki",
+    "plugin",
+    "live capture"
+  ],
+  "author": {
+    "name": "David Bovill"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Hitchhikers-Guide-to-the-Galaxy/wiki-plugin-live.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Hitchhikers-Guide-to-the-Galaxy/wiki-plugin-live/issues"
+  },
+  "homepage": "https://github.com/Hitchhikers-Guide-to-the-Galaxy/wiki-plugin-live#readme",
+  "files": [
+    "api",
+    "client",
+    "pages",
+    "factory.json",
+    "ReadMe.md"
+  ],
+  "scripts": {
+    "test": "npm run version-file --silent && node --test test/*.test.mjs",
+    "version-file": "node -e \"require('fs').writeFileSync('client/version.json', JSON.stringify({version: require('./package.json').version}) + '\\n')\"",
+    "prepack": "npm run version-file"
+  },
+  "fedwiki": {
+    "api": {
+      "version": 1,
+      "spec": "api/openapi.json",
+      "handlers": "api/handlers.js"
+    }
+  }
+}
