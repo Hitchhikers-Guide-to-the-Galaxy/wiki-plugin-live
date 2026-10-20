@@ -52,6 +52,7 @@
         "summary": "Mic Check: open the microphone and feed the meter, recording nothing",
         "description": "Runs ffmpeg against the microphone for a while (30 s by default) so status carries its level. stop ends it early. While the recorder runs this does nothing: the meter is already live.",
         "x-fedwiki-writes": true,
+        "x-fedwiki-private-only": true,
         "x-fedwiki-context": [
           "status"
         ],
@@ -102,6 +103,7 @@
         "summary": "Start the recorder (or resume it after an interruption)",
         "description": "Spawns ffmpeg, detached, writing assets/<slug>/live/seg-RR-NNNN.ts in one-minute segments. After an interruption a new run starts at the offset where the last one's audio stops, so session seconds stay the position in the stitched recording.",
         "x-fedwiki-writes": true,
+        "x-fedwiki-private-only": true,
         "x-fedwiki-context": [
           "status"
         ],
@@ -144,6 +146,7 @@
         "summary": "Begin or Finish a contribution",
         "description": "Stamps the mark in session seconds from the recorder's clock and writes marks.json (fsync) before answering. A Begin while a contribution is open finishes it at the same instant.",
         "x-fedwiki-writes": true,
+        "x-fedwiki-private-only": true,
         "x-fedwiki-context": [
           "status"
         ],
@@ -198,6 +201,7 @@
         "summary": "End: the last mark, stop the recorder, stitch the recording",
         "description": "Writes the End mark, stops ffmpeg (it closes its last segment), and stitches every run into assets/<slug>/<slug>.m4a. The segments are kept until the page is reviewed. Called again it re-stitches.",
         "x-fedwiki-writes": true,
+        "x-fedwiki-private-only": true,
         "x-fedwiki-context": [
           "status"
         ],
